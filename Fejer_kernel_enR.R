@@ -1,0 +1,6 @@
+plot(kernel("fejer",100,r=9))
+plot(kernel("daniell",30))
+plot(kernel("fejer",100,r=12))
+plot(kernel("daniell",c(30,30)))
+plot(kernel("daniell",c(5,5,5)))
+plot(kernel("fejer",100,r=5))

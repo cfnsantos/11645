@@ -1,0 +1,33 @@
+library(TSA)
+dat <- read.table(file="C:\\pruebas_r\\iph_mall_men_ib.dat", header=FALSE)
+ip<-dat[1:4748,3]
+iph <-matrix(data=ip,ncol=1)
+iph <- ts(iph, start = c(2003, 1), frequency = 365)
+plot(iph)
+iph2<-iph[1:(4748-365)]
+iph2 <-matrix(data=iph2,ncol=1)
+ip2 <- ts(iph2, start = c(2003, 1), frequency = 365)
+plot(log(ip2))
+t=seq(1,nrow(ip2))
+det_seas=cos(0*t)
+for (j in 1:182) {det_seas=cbind(det_seas,cos(2*pi*t*j/365),sin(2*pi*t*j/365))}
+end1 <-log(ip2)
+exo1 <-cbind(det_seas,t)
+rho <-solve(t(exo1)%*%exo1)%*%(t(exo1)%*%end1)
+ip2_e=log(ip2)-exo1%*%rho
+ip2_f=exo1%*%rho
+ip2_e <- ts(ip2_e, start = c(2003, 1), frequency = 365)
+ip2_f <- ts(ip2_f, start = c(2003, 1), frequency = 365)
+ts.plot(log(ip2),ip2_f,col=1:2)
+ts.plot(ip2_e)
+acf(ip2_e,lag.max = 28)
+pacf(ip2_e,lag.max = 28)
+acf(diff(ip2_e),lag.max = 28)
+acf(diff(diff(ip2_e,1),7),lag.max = 28)
+pacf(diff(diff(ip2_e,1),7),lag.max = 28)
+m2<-arima(ip2_e,order=c(1,1,0),seasonal = list(order = c(0,1,1), period = 7))
+res_m2<-residuals(m2)
+acf(res_m2,lag.max = 28)
+tsdiag(m2)
+ip2_ef<-fitted(m2)
+ts.plot(ip2_e,ip2_ef,col=2:1)

@@ -1,0 +1,15 @@
+library(tseries)
+dax <- read.table(file="d:\\pruebas_r\\DAX_ret.dat", header=FALSE)
+dax <- ts(dax, start = c(1981, 1), frequency = 365)
+plot(dax)
+acf(dax)
+pacf(dax)
+acf(dax^2)
+pacf(dax^2)
+
+
+m_1<-arima(dax^2,order=c(1,0,1))
+m1<-garch(dax,order=c(1,1))
+plot(m1)
+
+
